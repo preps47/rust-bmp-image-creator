@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "bmp-image-creator"
+name = "bmp_image"
 version = "0.1.0"
