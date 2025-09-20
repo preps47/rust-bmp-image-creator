@@ -69,10 +69,10 @@ impl BMPImage {
 
         // Header (14 bytes)
         header.extend_from_slice(&[0x42, 0x4d]); // "BM" signature
-        header.extend_from_slice(&(54 + 32 * self.width * self.height).to_le_bytes()); // File size
+        header.extend_from_slice(&(70 + 32 * self.width * self.height).to_le_bytes()); // File size
         header.extend_from_slice(&0u16.to_le_bytes()); // Reserved (0)
         header.extend_from_slice(&0u16.to_le_bytes()); // Reserved (0)
-        header.extend_from_slice(&54u32.to_le_bytes()); // Pixel array offset
+        header.extend_from_slice(&70u32.to_le_bytes()); // Pixel array offset
 
         // DIB header (40 bytes)
         header.extend_from_slice(&56u32.to_le_bytes()); // DIB header size
