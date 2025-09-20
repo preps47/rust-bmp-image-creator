@@ -75,25 +75,24 @@ impl BMPImage {
         header.extend_from_slice(&70u32.to_le_bytes()); // Pixel array offset
 
         // DIB header (40 bytes)
-        header.extend_from_slice(&56u32.to_le_bytes()); // DIB header size
+        header.extend_from_slice(&40u32.to_le_bytes()); // DIB header size
         header.extend_from_slice(&self.width.to_le_bytes()); // Width
         header.extend_from_slice(&self.height.to_le_bytes()); // Height
         header.extend_from_slice(&1u16.to_le_bytes()); // Color planes (1)
         header.extend_from_slice(&32u16.to_le_bytes()); // Bits per pixel
-        header.extend_from_slice(&0u32.to_le_bytes()); // Compression type
+        header.extend_from_slice(&3u32.to_le_bytes()); // Compression type
         header.extend_from_slice(&(self.width * self.height * 4).to_le_bytes()); // Image size in bytes
         header.extend_from_slice(&self.horizontal_ppm.to_le_bytes()); // Horizontal PPM
         header.extend_from_slice(&self.vertical_ppm.to_le_bytes()); // Vertical PPM
         header.extend_from_slice(&0u32.to_le_bytes()); // Number of colors in palette
         header.extend_from_slice(&0u32.to_le_bytes()); // Number of important colors
-        header.extend_from_slice(&0u16.to_le_bytes()); // Units for horizontal and vertical resolution
-        header.extend_from_slice(&0u16.to_le_bytes()); // Padding (0)
-        header.extend_from_slice(&0u16.to_le_bytes()); // Fill direction (low-left corner)
-        header.extend_from_slice(&0u16.to_le_bytes()); // Halftoning algorithm
-        header.extend_from_slice(&0u32.to_le_bytes()); // Halftoning parameter 1
-        header.extend_from_slice(&0u32.to_le_bytes()); // Halftoning parameter 2
-        header.extend_from_slice(&0u32.to_le_bytes()); // Color encoding
     
+        // Color masks (16 bytes)
+        header.extend_from_slice(&0x00FF0000u32.to_le_bytes()); // Red mask
+        header.extend_from_slice(&0x0000FF00u32.to_le_bytes()); // Green mask
+        header.extend_from_slice(&0x000000FFu32.to_le_bytes()); // Blue mask
+        header.extend_from_slice(&0xFF000000u32.to_le_bytes()); // Alpha mask
+        
         image.write_all(header.as_slice())?;
         
         Ok(image)
