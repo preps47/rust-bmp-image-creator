@@ -88,6 +88,7 @@ impl BMPImage {
         header.extend_from_slice(&0u32.to_le_bytes()); // Number of important colors
         header.extend_from_slice(&0u16.to_le_bytes()); // Units for horizontal and vertical resolution
         header.extend_from_slice(&0u16.to_le_bytes()); // Padding (0)
+        header.extend_from_slice(&0u16.to_le_bytes()); // Fill direction (low-left corner)
         header.extend_from_slice(&0u16.to_le_bytes()); // Halftoning algorithm
         header.extend_from_slice(&0u32.to_le_bytes()); // Halftoning parameter 1
         header.extend_from_slice(&0u32.to_le_bytes()); // Halftoning parameter 2
