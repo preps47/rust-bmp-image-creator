@@ -31,7 +31,7 @@ impl BMPBitmap {
         for _ in 0..width {
             let mut row: Vec<u32> = vec![];
             for _ in 0..height {
-                row.push(Color::WHITE);
+                row.push(Color::TRANSPARENT);
             }
             
             bitmap.push(row);
