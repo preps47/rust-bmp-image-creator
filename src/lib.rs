@@ -10,34 +10,13 @@ impl Color {
     pub const GREEN: u32 = 0xFF00FF00;
     pub const BLUE: u32 = 0xFF0000FF;
     pub const TRANSPARENT: u32 = 0x00000000;
-    
+
     pub fn from_argb(alpha: u8, red: u8, green: u8, blue: u8) -> u32 {
         (alpha as u32) << 24 | (red as u32) << 16 | (green as u32) << 8 | (blue as u32)
     }
-    
+
     pub fn from_rgb(red: u8, green: u8, blue: u8) -> u32 {
         Self::from_argb(255, red, green, blue)
-    }
-}
-
-pub struct BMPBitmap {
-    pub bitmap: Vec<Vec<u32>>    
-}
-
-impl BMPBitmap {
-    pub fn new(width: i32, height: i32) -> BMPBitmap {
-        let mut bitmap: Vec<Vec<u32>> = vec![];
-        
-        for _ in 0..width {
-            let mut row: Vec<u32> = vec![];
-            for _ in 0..height {
-                row.push(Color::TRANSPARENT);
-            }
-            
-            bitmap.push(row);
-        }
-        
-        BMPBitmap { bitmap }
     }
 }
 
@@ -45,7 +24,8 @@ pub struct BMPImage {
     width: i32,
     height: i32,
     horizontal_ppm: i32,
-    vertical_ppm: i32
+    vertical_ppm: i32, 
+    bitmap: Vec<Vec<u32>>
 }
 
 impl BMPImage {
@@ -53,13 +33,15 @@ impl BMPImage {
         width: i32,
         height: i32,
         horizontal_ppm: i32,
-        vertical_ppm: i32
+        vertical_ppm: i32, 
+        background_color: u32
     ) -> BMPImage {
         BMPImage {
             width,
             height,
             horizontal_ppm,
-            vertical_ppm
+            vertical_ppm, 
+            bitmap: vec![vec![background_color; height]; width]
         }
     }
 
@@ -88,20 +70,16 @@ impl BMPImage {
         header.extend_from_slice(&0u32.to_le_bytes()); // Number of important colors
 
         image.write_all(header.as_slice())?;
-        
+
         Ok(image)
     }
-    
-    pub fn create_table(&self) -> BMPBitmap {
-        BMPBitmap::new(self.width, self.height)
-    }
-    
-    pub fn write_bitmap(&self, image: &mut File, bmp_bitmap: BMPBitmap) -> std::io::Result<()> {
-        let bitmap: Vec<u8> = bmp_bitmap.bitmap.into_iter()
+
+    pub fn write_bitmap(&self, image: &mut File) -> std::io::Result<()> {
+        let bitmap: Vec<u8> = self.bitmap.into_iter()
             .flat_map(|row| row.into_iter())
             .flat_map(|pixel| pixel.to_le_bytes().into_iter())
             .collect();
-        
+
         image.write_all(bitmap.as_slice())
     }
 }
