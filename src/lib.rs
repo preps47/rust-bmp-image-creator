@@ -69,13 +69,13 @@ impl BMPImage {
 
         // Header (14 bytes)
         header.extend_from_slice(&[0x42, 0x4d]); // "BM" signature
-        header.extend_from_slice(&(86 + 4 * self.width * self.height).to_le_bytes()); // File size
+        header.extend_from_slice(&(70 + 4 * self.width * self.height).to_le_bytes()); // File size
         header.extend_from_slice(&0u16.to_le_bytes()); // Reserved (0)
         header.extend_from_slice(&0u16.to_le_bytes()); // Reserved (0)
-        header.extend_from_slice(&86u32.to_le_bytes()); // Pixel array offset
+        header.extend_from_slice(&70u32.to_le_bytes()); // Pixel array offset
 
-        // DIB header (56 bytes)
-        header.extend_from_slice(&56u32.to_le_bytes()); // DIB header size
+        // DIB header (40 bytes)
+        header.extend_from_slice(&40u32.to_le_bytes()); // DIB header size
         header.extend_from_slice(&self.width.to_le_bytes()); // Width
         header.extend_from_slice(&self.height.to_le_bytes()); // Height
         header.extend_from_slice(&1u16.to_le_bytes()); // Color planes (1)
@@ -86,13 +86,6 @@ impl BMPImage {
         header.extend_from_slice(&self.vertical_ppm.to_le_bytes()); // Vertical PPM
         header.extend_from_slice(&0u32.to_le_bytes()); // Number of colors in palette
         header.extend_from_slice(&0u32.to_le_bytes()); // Number of important colors
-        header.extend_from_slice(&0u16.to_le_bytes()); // Units of horizontal and vertical resolutions
-        header.extend_from_slice(&0u16.to_le_bytes()); // Padding (0)
-        header.extend_from_slice(&0u16.to_le_bytes()); // Fill direction (low-left corner)
-        header.extend_from_slice(&0u16.to_le_bytes()); // Halftoning algorithm
-        header.extend_from_slice(&0u32.to_le_bytes()); // Halftoning parameter 1
-        header.extend_from_slice(&0u32.to_le_bytes()); // Halftoning parameter 2
-        header.extend_from_slice(&2u32.to_le_bytes()); // Color encoding
 
         // Color masks (16 bytes)
         header.extend_from_slice(&0x00FF0000u32.to_le_bytes()); // Red mask
