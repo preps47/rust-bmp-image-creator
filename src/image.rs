@@ -30,8 +30,8 @@ impl BMPImage {
     }
 
     /// Creates a file with the necessary headers for a standard .bmp image with 32 bits pixel's color information.
-    pub fn init_headers(&self) -> std::io::Result<File> {
-        let mut image = File::create("image.bmp")?;
+    pub fn init_headers(&self, path: &str) -> std::io::Result<File> {
+        let mut image = File::create(path)?;
         let mut header: Vec<u8> = vec![];
 
         // Header (14 bytes)
@@ -114,6 +114,7 @@ impl BMPImage {
         }
     }
 
+    /// Draws a circle from a center and a radius using the midpoint circle algorithm.
     pub fn draw_circle(&mut self, cx: usize, cy: usize, radius: usize, color: u32) {
         if radius == 0 {
             self.set_pixel(cx, cy, color);
@@ -131,12 +132,14 @@ impl BMPImage {
                 } else {
                     d += 4 * x as isize + 6;
                 }
-                
+
                 x += 1
             }
         }
     }
 
+    /// Helper method for the ```draw_circle()``` function.
+    /// Draws eight points for each iteration, reducing the processing time.
     fn draw_eight_points(&mut self, cx: usize, cy: usize, x: usize, y: usize, color: u32) {
         let points = [
             (cx + x, cy + y), (cx - x, cy - y),
