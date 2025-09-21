@@ -69,4 +69,32 @@ impl BMPImage {
             self.bitmap[x][y] = color
         }
     }
+
+    // Bresenham's line algorithm
+    pub fn draw_line(&mut self, x0: usize, y0: usize, x1: usize, y1: usize, color: u32) {
+        let mut x0 = x0 as isize;
+        let mut y0 = y0 as isize;
+        let x1 = x1 as isize;
+        let y1 = y1 as isize;
+
+        let dx = (x1 - x0).abs();
+        let dy = -(y1 - y0).abs();
+        let mut error = 2 * (dx + dy);
+
+        let sx = if x0 < x1 { 1 } else { -1 };
+        let sy = if y0 < y1 { 1 } else { -1 };
+
+        while error >= dy && x0 == x1 || error <= dx && y0 == y1 {
+            self.set_pixel(x0 as usize, y0 as usize, color);
+
+            if error >= dy {
+                error += dy;
+                x0 += sx;
+            }
+            if  error <= dx {
+                error += dx;
+                y0 += sy;
+            }
+        }
+    }
 }
