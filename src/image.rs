@@ -28,8 +28,8 @@ impl BMPImage {
             bitmap: vec![vec![background_color; height as usize]; width as usize]
         }
     }
-    
-    /// Creates a file with the necessary headers for a standard .bmp image with 32 bits pixel's color information. 
+
+    /// Creates a file with the necessary headers for a standard .bmp image with 32 bits pixel's color information.
     pub fn init_headers(&self) -> std::io::Result<File> {
         let mut image = File::create("image.bmp")?;
         let mut header: Vec<u8> = vec![];
@@ -76,7 +76,7 @@ impl BMPImage {
             self.bitmap[x][y] = color
         }
     }
-    
+
     /// Draws a line from two points in the bitmap using the Bresenham's line algorithm.
     pub fn draw_line(&mut self, x0: usize, y0: usize, x1: usize, y1: usize, color: u32) {
         if (x0 + x1) < self.width as usize && (y0 + y1) < self.height as usize {
@@ -111,6 +111,42 @@ impl BMPImage {
                     y0 += sy;
                 }
             }
+        }
+    }
+
+    pub fn draw_circle(&mut self, cx: usize, cy: usize, radius: usize, color: u32) {
+        if radius == 0 {
+            self.set_pixel(cx, cy, color);
+        } else {
+            let mut x = 0;
+            let mut y = radius as isize;
+            let mut d = 3 - 2 * radius as isize;
+
+            while x <= y as usize {
+                self.draw_eight_points(cx, cy, x, y as usize, color);
+
+                if d > 0 {
+                    y -= 1;
+                    d += 4 * (x as isize - y) + 10;
+                } else {
+                    d += 4 * x as isize + 6;
+                }
+                
+                x += 1
+            }
+        }
+    }
+
+    fn draw_eight_points(&mut self, cx: usize, cy: usize, x: usize, y: usize, color: u32) {
+        let points = [
+            (cx + x, cy + y), (cx - x, cy - y),
+            (cx + x, cy - y), (cx - x, cy + y),
+            (cx + y, cy + x), (cx - y, cy - x),
+            (cx + y, cy - x), (cx - y, cy + x)
+        ];
+
+        for (px, py) in points {
+            self.set_pixel(px, py, color)
         }
     }
 }
