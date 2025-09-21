@@ -1,6 +1,8 @@
 use std::fs::File;
 use std::io::Write;
 
+/// Base struct to create a .bmp image.
+/// It will incorporate the width and the height of the image, as well as the horizontal and the vertical pixel per meter.
 pub struct BMPImage {
     width: i32,
     height: i32,
@@ -10,6 +12,7 @@ pub struct BMPImage {
 }
 
 impl BMPImage {
+    /// Creates a new BMPImage struct with a single color background.
     pub fn new(
         width: i32,
         height: i32,
@@ -25,7 +28,8 @@ impl BMPImage {
             bitmap: vec![vec![background_color; height as usize]; width as usize]
         }
     }
-
+    
+    /// Creates a file with the necessary headers for a standard .bmp image with 32 bits pixel's color information. 
     pub fn init_headers(&self) -> std::io::Result<File> {
         let mut image = File::create("image.bmp")?;
         let mut header: Vec<u8> = vec![];
@@ -55,6 +59,8 @@ impl BMPImage {
         Ok(image)
     }
 
+    /// Writes the bitmap stored in a file.
+    /// Better used with ```init_header()``` function so that in result you'll have a complete .bmp image.
     pub fn write_bitmap(&self, image: &mut File) -> std::io::Result<()> {
         let bitmap: Vec<u8> = self.bitmap.iter()
             .flat_map(|row| row.into_iter())
@@ -64,43 +70,46 @@ impl BMPImage {
         image.write_all(bitmap.as_slice())
     }
 
+    /// Sets a pixel in the bitmap to a color
     pub fn set_pixel(&mut self, x: usize, y: usize, color: u32) {
         if x < self.width as usize && y < self.height as usize {
             self.bitmap[x][y] = color
         }
     }
-
-    // Bresenham's line algorithm
+    
+    /// Draws a line from two points in the bitmap using the Bresenham's line algorithm.
     pub fn draw_line(&mut self, x0: usize, y0: usize, x1: usize, y1: usize, color: u32) {
-        let mut x0 = x0 as isize;
-        let mut y0 = y0 as isize;
-        let x1 = x1 as isize;
-        let y1 = y1 as isize;
+        if (x0 + x1) < self.width as usize && (y0 + y1) < self.height as usize {
+            let mut x0 = x0 as isize;
+            let mut y0 = y0 as isize;
+            let x1 = x1 as isize;
+            let y1 = y1 as isize;
 
-        let dx = (x1 - x0).abs();
-        let dy = -(y1 - y0).abs();
-        let mut error = dx + dy;
+            let dx = (x1 - x0).abs();
+            let dy = -(y1 - y0).abs();
+            let mut error = dx + dy;
 
-        let sx = if x0 < x1 { 1 } else { -1 };
-        let sy = if y0 < y1 { 1 } else { -1 };
+            let sx = if x0 < x1 { 1 } else { -1 };
+            let sy = if y0 < y1 { 1 } else { -1 };
 
-        loop {
-            self.set_pixel(x0 as usize, y0 as usize, color);
+            loop {
+                self.set_pixel(x0 as usize, y0 as usize, color);
 
-            let e2 = 2 * error;
-            if e2 >= dy {
-                if x0 == x1 {
-                    break;
+                let e2 = 2 * error;
+                if e2 >= dy {
+                    if x0 == x1 {
+                        break;
+                    }
+                    error += dy;
+                    x0 += sx;
                 }
-                error += dy;
-                x0 += sx;
-            }
-            if e2 <= dx {
-                if y0 == y1 {
-                    break;
+                if e2 <= dx {
+                    if y0 == y1 {
+                        break;
+                    }
+                    error += dx;
+                    y0 += sy;
                 }
-                error += dx;
-                y0 += sy;
             }
         }
     }
