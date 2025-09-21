@@ -85,6 +85,7 @@ impl BMPImage {
         let sy = if y0 < y1 { 1 } else { -1 };
 
         while error >= dy && x0 == x1 || error <= dx && y0 == y1 {
+            println!("({}, {}), ({}, {}); {}", x0, y0, x1, y1, error);
             self.set_pixel(x0 as usize, y0 as usize, color);
 
             if error >= dy {

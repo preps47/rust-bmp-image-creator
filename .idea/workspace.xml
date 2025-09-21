@@ -51,7 +51,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.rust.reset.selective.auto.import": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "test",
     "last_opened_file_path": "/Users/marco/projects/bmp-image-creator",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -112,7 +112,7 @@
       <option name="presentableId" value="Default" />
       <updated>1758307123011</updated>
       <workItem from="1758307123430" duration="11937000" />
-      <workItem from="1758348717704" duration="5307000" />
+      <workItem from="1758348717704" duration="5742000" />
     </task>
     <servers />
   </component>
