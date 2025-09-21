@@ -11,7 +11,9 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4c8612da-9c63-4994-8596-2201f4054349" name="Changes" comment="" />
+    <list default="true" id="4c8612da-9c63-4994-8596-2201f4054349" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/image.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/image.rs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -109,7 +111,7 @@
       <option name="presentableId" value="Default" />
       <updated>1758307123011</updated>
       <workItem from="1758307123430" duration="11937000" />
-      <workItem from="1758348717704" duration="5792000" />
+      <workItem from="1758348717704" duration="6046000" />
     </task>
     <servers />
   </component>

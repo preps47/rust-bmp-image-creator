@@ -79,21 +79,26 @@ impl BMPImage {
 
         let dx = (x1 - x0).abs();
         let dy = -(y1 - y0).abs();
-        let mut error = 2 * (dx + dy);
+        let mut error = dx + dy;
 
         let sx = if x0 < x1 { 1 } else { -1 };
         let sy = if y0 < y1 { 1 } else { -1 };
-        println!("({}, {}), ({}, {}); {}", x0, y0, x1, y1, error);
-        
-        while error >= dy && x0 == x1 || error <= dx && y0 == y1 {
-            println!("({}, {}), ({}, {}); {}", x0, y0, x1, y1, error);
+
+        loop {
             self.set_pixel(x0 as usize, y0 as usize, color);
 
-            if error >= dy {
+            let e2 = 2 * error;
+            if e2 >= dy {
+                if x0 == x1 {
+                    break;
+                }
                 error += dy;
                 x0 += sx;
             }
-            if  error <= dx {
+            if e2 <= dx {
+                if y0 == y1 {
+                    break;
+                }
                 error += dx;
                 y0 += sy;
             }
