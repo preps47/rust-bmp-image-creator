@@ -41,7 +41,7 @@ impl BMPImage {
             height,
             horizontal_ppm,
             vertical_ppm, 
-            bitmap: vec![vec![background_color; height]; width]
+            bitmap: vec![vec![background_color; height as usize]; width as usize]
         }
     }
 
@@ -75,11 +75,17 @@ impl BMPImage {
     }
 
     pub fn write_bitmap(&self, image: &mut File) -> std::io::Result<()> {
-        let bitmap: Vec<u8> = self.bitmap.into_iter()
+        let bitmap: Vec<u8> = self.bitmap.iter()
             .flat_map(|row| row.into_iter())
             .flat_map(|pixel| pixel.to_le_bytes().into_iter())
             .collect();
 
         image.write_all(bitmap.as_slice())
+    }
+    
+    pub fn set_pixel(&mut self, x: usize, y: usize, color: u32) {
+        if x < self.width as usize && y < self.height as usize {
+            self.bitmap[x][y] = color
+        }
     }
 }
