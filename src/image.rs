@@ -158,7 +158,9 @@ impl BMPImage {
         I: IntoIterator<Item = (usize, u32)>
     {
         for x in 0..self.width as usize {
+            println!("{}", x);
             for (y, color) in f(x) {
+                println!("{}, {}", y, color);
                 if y < self.height as usize {
                     self.set_pixel(x, y, color);
                 }
