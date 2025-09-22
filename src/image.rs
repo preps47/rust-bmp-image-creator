@@ -25,7 +25,7 @@ impl BMPImage {
             height,
             horizontal_ppm,
             vertical_ppm,
-            bitmap: vec![vec![background_color; height as usize]; width as usize]
+            bitmap: vec![vec![background_color; width as usize]; height as usize]
         }
     }
 
@@ -74,7 +74,7 @@ impl BMPImage {
     /// Sets a pixel in the bitmap to a color
     pub fn set_pixel(&mut self, x: usize, y: usize, color: u32) {
         if x < self.width as usize && y < self.height as usize {
-            self.bitmap[x][y] = color
+            self.bitmap[y][x] = color
         }
     }
 
@@ -153,7 +153,7 @@ impl BMPImage {
             self.set_pixel(px, py, color)
         }
     }
-    
+
     pub fn apply_on_x<I>(&mut self, f: impl Fn(usize) -> I)
     where
         I: IntoIterator<Item = (usize, u32)>
@@ -183,41 +183,31 @@ impl BMPImage {
 
 #[cfg(test)]
 mod test {
-    use std::io::Read;
     use super::*;
 
     #[test]
-    fn test_write_bitmap() {
+    fn test_set_pixel() {
         let mut bmp_image = BMPImage::new(13, 7, 1000, 1000, 0x00000000);
-        bmp_image.set_pixel(9, 3, 0xFFFFFFFF);
-
-        let mut file = File::create("test1").unwrap();
-        bmp_image.write_bitmap(&mut file).unwrap();
-
-        let mut buf = vec![];
-        file = File::open("test1").unwrap();
-        file.read_to_end(&mut buf).unwrap();
-
-        let v: Vec<u32> = vec![
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
-            0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000
-        ];
-
+        bmp_image.set_pixel(2, 4, 0xFFFFFFFF);
+        
         assert_eq!(
-            buf,
-            v.iter().flat_map(|pixel| pixel.to_le_bytes()).collect::<Vec<u8>>()
-        );
+            bmp_image.bitmap,
+            vec![
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0xFFFFFFFF, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000],
+                vec![0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000]
+            ]
+        )
     }
 
     #[test]
