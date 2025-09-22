@@ -152,4 +152,30 @@ impl BMPImage {
             self.set_pixel(px, py, color)
         }
     }
+
+    pub fn apply_on_x<I>(&mut self, f: impl Fn(usize) -> I)
+    where
+        I: IntoIterator<Item = (usize, u32)>
+    {
+        for x in 0..self.width as usize {
+            for (y, color) in f(x) {
+                if y < self.height as usize {
+                    self.set_pixel(x, y, color);
+                }
+            }
+        }
+    }
+
+    pub fn apply_on_y<I>(&mut self, f: impl Fn(usize) -> I)
+    where
+        I: IntoIterator<Item = (usize, u32)>
+    {
+        for y in 0..self.height as usize {
+            for (x, color) in f(y) {
+                if x < self.width as usize {
+                    self.set_pixel(x, y, color);
+                }
+            }
+        }
+    }
 }
