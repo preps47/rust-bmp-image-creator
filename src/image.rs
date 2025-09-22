@@ -153,7 +153,7 @@ impl BMPImage {
         }
     }
 
-    pub fn apply_on_x<I>(&mut self, f: impl Fn(usize) -> I)
+    pub fn draw_on_x<I>(&mut self, f: impl Fn(usize) -> I)
     where
         I: IntoIterator<Item = (usize, u32)>
     {
@@ -166,7 +166,7 @@ impl BMPImage {
         }
     }
 
-    pub fn apply_on_y<I>(&mut self, f: impl Fn(usize) -> I)
+    pub fn draw_on_y<I>(&mut self, f: impl Fn(usize) -> I)
     where
         I: IntoIterator<Item = (usize, u32)>
     {
@@ -176,6 +176,18 @@ impl BMPImage {
                     self.set_pixel(x, y, color);
                 }
             }
+        }
+    }
+
+    pub fn apply_on_x(&mut self, f: impl Fn(&mut BMPImage, usize)) {
+        for x in 0..self.width as usize {
+            f(self, x);
+        }
+    }
+
+    pub fn apply_on_y(&mut self, f: impl Fn(&mut BMPImage, usize)) {
+        for y in 0..self.height as usize {
+            f(self, y);
         }
     }
 }
