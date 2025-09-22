@@ -184,10 +184,8 @@ impl BMPImage {
         for x in 0..self.width as usize {
             values.push((x, f(x)))
         }
-        for i in 1..(values.len() / 2 + 1) {
-            if i * 2 <= values.len() {
-                self.draw_line(values[i].0, values[i].1, values[i * 2].0, values[i * 2].1, color);
-            }
+        for i in 1..values.len() {
+            self.draw_line(values[i - 1].0, values[i - 1].1, values[i].0, values[i].1, color);
         }
     }
 
@@ -196,10 +194,8 @@ impl BMPImage {
         for y in 0..self.height as usize {
             values.push((f(y), y))
         }
-        for i in 1..(values.len() / 2 + 1) {
-            if i * 2 <= values.len() {
-                self.draw_line(values[i].0, values[i].1, values[i * 2].0, values[i * 2].1, color);
-            }
+        for i in 1..values.len() {
+            self.draw_line(values[i - 1].0, values[i - 1].1, values[i].0, values[i].1, color);
         }
     }
 }
