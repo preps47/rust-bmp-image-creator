@@ -179,15 +179,23 @@ impl BMPImage {
         }
     }
 
-    pub fn apply_on_x(&mut self, f: impl Fn(&mut BMPImage, usize)) {
+    pub fn apply_on_x(&mut self, f: impl Fn(usize) -> usize, color: u32) {
+        let mut values: Vec<(usize, usize)> = vec![];
         for x in 0..self.width as usize {
-            f(self, x);
+            values.push((x, f(x)))
+        }
+        for i in 0..(values.len() / 2) + 1 {
+            self.draw_line(values[i].0, values[i].1, values[i * 2].0, values[i * 2].1, color);
         }
     }
 
-    pub fn apply_on_y(&mut self, f: impl Fn(&mut BMPImage, usize)) {
+    pub fn apply_on_y(&mut self, f: impl Fn(usize) -> usize, color: u32) {
+        let mut values: Vec<(usize, usize)> = vec![];
         for y in 0..self.height as usize {
-            f(self, y);
+            values.push((f(y), y))
+        }
+        for i in 0..(values.len() / 2) + 1 {
+            self.draw_line(values[i].0, values[i].1, values[i * 2].0, values[i * 2].1, color);
         }
     }
 }
