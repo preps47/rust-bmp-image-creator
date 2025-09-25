@@ -10,13 +10,14 @@ let width: i32 = 256;
 let height: i32 = 256;
 let horizontal_ppm: i32 = 1000; 
 let vertical_ppm: i32 = 1000; 
+let background_color: u32 = Color::WHITE;
 <bl> 
 let mut bmp_image = BMPImage::new( 
     width,
     height,
     horizontal_ppm,
     vertical_ppm,
-    Color::WHITE
+    background_color
 );
 </pre>
 <p>Now just create a new file with the specification you typed earlier:</p>
@@ -44,5 +45,15 @@ bmp_image.write_bitmap(&mut image).unwrap();
 <td>draw_circle</td>
 <td>cx: usize, cy: usize, radius: usize, color: u32</td>
 <td>Draws a circle given a center (cx, cy) and a radius</td>
+</tr>
+<tr>
+<td>draw_on_x/y</td>
+<td>f: Fn(usize) -> IntoIterator<(usize, u32)></td>
+<td>Draws a series of points from a function that returns a list of expression and colors</td>
+</tr>
+<tr>
+<td>apply_on_x/y</td>
+<td>f: Fn(usize) -> usize, color: u32</td>
+<td>Draws a curve from a function that returns an expression</td>
 </tr>
 </table>

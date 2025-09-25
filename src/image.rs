@@ -79,7 +79,10 @@ impl BMPImage {
 
     /// Draws a line from two points in the bitmap using the Bresenham's line algorithm.
     pub fn draw_line(&mut self, x0: usize, y0: usize, x1: usize, y1: usize, color: u32) {
-        if (x0 + x1) < self.width as usize && (y0 + y1) < self.height as usize {
+        if 
+            x0 < self.width as usize && x1 < self.width as usize 
+            && y0 < self.height as usize && y1 < self.height as usize 
+        {
             let mut x0 = x0 as isize;
             let mut y0 = y0 as isize;
             let x1 = x1 as isize;
@@ -153,6 +156,7 @@ impl BMPImage {
         }
     }
 
+    /// Draws a series of points from a list of functions f(x).
     pub fn draw_on_x<I>(&mut self, f: impl Fn(usize) -> I)
     where
         I: IntoIterator<Item = (usize, u32)>
@@ -166,6 +170,7 @@ impl BMPImage {
         }
     }
 
+    /// Draws a series of points from a list of functions f(y).
     pub fn draw_on_y<I>(&mut self, f: impl Fn(usize) -> I)
     where
         I: IntoIterator<Item = (usize, u32)>
@@ -179,6 +184,7 @@ impl BMPImage {
         }
     }
 
+    /// Draws a curve from a function f(x).
     pub fn apply_on_x(&mut self, f: impl Fn(usize) -> usize, color: u32) {
         let mut values: Vec<(usize, usize)> = vec![];
         for x in 0..self.width as usize {
@@ -189,6 +195,7 @@ impl BMPImage {
         }
     }
 
+    /// Draws a curve from a function f(y).
     pub fn apply_on_y(&mut self, f: impl Fn(usize) -> usize, color: u32) {
         let mut values: Vec<(usize, usize)> = vec![];
         for y in 0..self.height as usize {
